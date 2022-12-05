@@ -10,7 +10,7 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description: '')
     }
     tools {
-        maven 'Maven'
+       // maven 'Maven'
     }
 
     stages {
