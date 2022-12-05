@@ -15,7 +15,7 @@ pipeline {
    // }
 
     stages {
-        stage("inti") {
+        stage("init") {
             steps {
                 script {
                     gv = load "script.groovy"
@@ -25,7 +25,7 @@ pipeline {
         stage("build") {
             steps {
                 script {
-                    gv.buildApp
+                    gv.buildApp()
                 }
                 //echo "building stage..."
                // echo "building ${NEW_VERSION}"
@@ -42,7 +42,7 @@ pipeline {
             }
             steps {
                 script {
-                    gv.devApp
+                    gv.devApp()
                 }
                 
                 //withCredentials([
