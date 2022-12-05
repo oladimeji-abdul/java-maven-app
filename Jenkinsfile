@@ -1,4 +1,5 @@
 //CODE_CHANGES = getGitChanges
+def gv
 pipeline {
     agent any
     //environment {
@@ -14,9 +15,17 @@ pipeline {
    // }
 
     stages {
+        stage("inti") {
+            steps {
+                gv = load "script.groovy"
+            }
+        }
         stage("build") {
             steps {
-                echo "building stage..."
+                script {
+                    gv.buildApp
+                }
+                //echo "building stage..."
                // echo "building ${NEW_VERSION}"
                 //sh "mvn install"
             }
@@ -30,7 +39,10 @@ pipeline {
                 }
             }
             steps {
-                echo "dev stage...."
+                script {
+                    gv.devApp
+                }
+                
                 //withCredentials([
                 //    usernamePassword(credentials: 'server-credential', usernameVarialbe: USER passwordVariable: PWD)
                 //]) {
