@@ -1,56 +1,33 @@
-//CODE_CHANGES = getGitChanges
-def gv
 pipeline {
     agent any
-    //environment {
-    //    NEW_VERSION = '1.0'
-       // SERVER_CREDENTIALS = credential('server_credential')
-    //}
-    parameters {
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'executeTests', defaultValue: true, description: '')
+    tools {
+        maven 'maven-3.8'
     }
-   // tools {
-       // maven 'Maven'
-   // }
+    stages {
+        stage("build jar") {
+            steps {
+                script {
+                    echo "building jar file"
+                    sh 'mvn package'
+                }
+
+            }
+        }
+    }
 
     stages {
-        stage("init") {
+        stage("build image") {
             steps {
                 script {
-                    gv = load "script.groovy"
-                }
-            }
-        }
-        stage("build") {
-            steps {
-                script {
-                    gv.buildApp()
-                }
-                //echo "building stage..."
-               // echo "building ${NEW_VERSION}"
-                //sh "mvn install"
-            }
-        }
-
-        stage("dev") {
-            when {
-                expression {
-                    //env.BRANCH_NAME == 'build' || env.BRANCH_NAME == 'test' && CODE_CHANGES == true
-                    params.executeTests == true
-                }
-            }
-            steps {
-                script {
-                    gv.devApp()
-                }
-                
-                //withCredentials([
-                //    usernamePassword(credentials: 'server-credential', usernameVarialbe: USER passwordVariable: PWD)
-                //]) {
-                //    sh "script run with ${USER} -p ${PWD}"
+                    echo "building docker image"
+                    withCredentials([usernamePassword(credentialsId: '', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh 'docker build -t 698834/demo-app:jma-3.0 .'
+                        sh 'echo PASS | docker login -u $USER --password-stdin'
+                        sh 'docker push 698834/demo-app:jma-3.0'
+                    }
                 }
 
             }
         }
     }
+}
