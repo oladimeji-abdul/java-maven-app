@@ -13,9 +13,6 @@ pipeline {
 
             }
         }
-    }
-
-    stages {
         stage("build image") {
             steps {
                 script {
@@ -26,12 +23,10 @@ pipeline {
                         sh 'docker push 698834/demo-app:jma-3.0'
                     }
                 }
-
             }
-        }
-    }
 
-    stages {
+   
+        }
         stage("app deploy") {
             steps {
                 script {
@@ -41,4 +36,6 @@ pipeline {
             }
         }
     }
+
+    
 }
